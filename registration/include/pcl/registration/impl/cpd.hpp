@@ -34,7 +34,7 @@
  *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *  POSSIBILITY OF SUCH DAMAGE.
  *
- * $Id: lum.hpp 5663 2012-05-02 13:49:39Z florentinus $
+ * $Id: cpd.hpp 5663 2015-02-17 13:49:39Z Xiaochen Fan $
  *
  */
 
