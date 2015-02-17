@@ -41,8 +41,8 @@
 #ifndef PCL_REGISTRATION_IMPL_CPD_HPP_
 #define PCL_REGISTRATION_IMPL_CPD_HPP_
 
-//#include <pcl/registration/cpd.h>
-#include "cpd.h"
+#include <pcl/registration/cpd.h>
+//#include "cpd.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template<typename PointT>

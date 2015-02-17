@@ -293,8 +293,8 @@ namespace pcl
 
     protected:
 
-      PointCloudSource source_cloud_;
-      PointCloudTarget target_cloud_;
+      PointCloudPtr source_cloud_;
+      PointCloudPtr target_cloud_;
 
       Matrix3f source_mat_;
       Matrix3f target_mat_;
@@ -328,6 +328,6 @@ namespace pcl
   }; // namespace registration  
 }; // namespace pcl 
 
-#include <pcl/registration/impl/ia_fpcs.hpp>
+#include <pcl/registration/impl/cpd.hpp>
 
 #endif // PCL_REGISTRATION_CPD_H_

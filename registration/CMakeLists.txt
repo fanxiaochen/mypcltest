@@ -134,6 +134,7 @@ if(build)
         src/correspondence_rejection_trimmed.cpp
         src/correspondence_rejection_var_trimmed.cpp
         src/correspondence_rejection_organized_boundary.cpp
+        src/cpd.cpp
         src/ppf_registration.cpp
         src/pyramid_feature_matching.cpp
         #src/pairwise_graph_registration.cpp
