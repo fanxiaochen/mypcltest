@@ -153,7 +153,7 @@ pcl::registration::CPD<PointT>::computeCorres ()
   {
     std::vector<float> t_exp;
     float sum_exp = 0;
-    float c = pow((2*M_PI*sigma2), 0.5*D) * (w_/(1-w_)) * (float(M)/N);
+    float c = pow((2*M_PI*sigma2), 0.5*3) * (w_/(1-w_)) * (float(M)/N);
     for (size_t m = 0; m < M; m ++)
     {
       float m_exp = computeGaussianExp(m, n);
@@ -207,13 +207,13 @@ pcl::registration::CPD<PointT>::energy ()
       sp += computeGaussianExp(m, n);
     }
 
-    sp += pow((2*M_PI*sigma2), 0.5*D) * (w/(1-w)) * (float(M)/N);
+    sp += pow((2*M_PI*sigma2), 0.5*3) * (w/(1-w)) * (float(M)/N);
 
     e += -log(sp);
 
   }
 
-  e += _N * D * log(sigma2) / 2;
+  e += _N * 3 * log(sigma2) / 2;
 
   return e;
 
@@ -293,7 +293,7 @@ pcl::registration::CPD<PointT>::m_step ()
   }
   else
   {
-    T n_p = p1_.sum();
+    float n_p = p1_.sum();
 
     MatrixXf A = (p1_.asDiagonal()*_G + nrigid_paras_.lambda_*nrigid_paras_.sigma2_*MatrixXf::Identity(M, M));
     MatrixXf B = px_ - p1_.asDiagonal() * source_mat_;
@@ -322,7 +322,7 @@ pcl::registration::CPD<PointT>::initialize ()
     rigid_paras_.t_ = VectorXf::Zero(3, 1);
     rigid_paras_.s_ = 1;
 
-    T sigma_sum = M*(target_mat_.transpose()*target_mat_).trace() + 
+    float sigma_sum = M*(target_mat_.transpose()*target_mat_).trace() + 
       N*(source_mat_.transpose()*source_mat_).trace() - 
       2*(target_mat_.colwise().sum())*(source_mat_.colwise().sum()).transpose();
     rigid_paras_.sigma2_ = sigma_sum / (3*N*M);
@@ -379,8 +379,8 @@ pcl::registration::CPD<PointT>::computeRigid ()
   reg_type_ = RIGID;
 
   size_t iter_num = 0;
-  T e_tol = 10 + energy_tol_;
-  T e = 0;
+  float e_tol = 10 + energy_tol_;
+  float e = 0;
 
   normalize();
   initialize();
@@ -389,7 +389,7 @@ pcl::registration::CPD<PointT>::computeRigid ()
   {
     e_step();
 
-    T old_e = e;
+    float old_e = e;
     e = energy();
     e_tol = abs((e - old_e) / e);
 
@@ -411,8 +411,8 @@ pcl::registration::CPD<PointT>::computeNonRigid ()
   reg_type_ = NONRIGID;
 
   size_t iter_num = 0;
-  T e_tol = 10 + energy_tol_;
-  T e = 0;
+  float e_tol = 10 + energy_tol_;
+  float e = 0;
 
   normalize();
   initialize();
@@ -422,7 +422,7 @@ pcl::registration::CPD<PointT>::computeNonRigid ()
 
     e_step();
 
-    T old_e = e;
+    float old_e = e;
     e = energy();
     e += nrigid_paras_.lambda_/2 * (nrigid_paras_.w_.transpose()*g_*nrigid_paras_.w_).trace();
     e_tol = abs((e - old_e) / e);
