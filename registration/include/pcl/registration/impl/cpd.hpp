@@ -207,13 +207,13 @@ pcl::registration::CPD<PointT>::energy ()
       sp += computeGaussianExp(m, n);
     }
 
-    sp += pow((2*M_PI*sigma2), 0.5*3) * (w/(1-w)) * (float(M)/N);
+    sp += pow((2*M_PI*sigma2), 0.5*3) * (w_/(1-w_)) * (float(M)/N);
 
     e += -log(sp);
 
   }
 
-  e += _N * 3 * log(sigma2) / 2;
+  e += N * 3 * log(sigma2) / 2;
 
   return e;
 
@@ -259,7 +259,7 @@ pcl::registration::CPD<PointT>::m_step ()
 
   if (reg_type_ == RIGID)
   {
-    float n_p = p1.sum();
+    float n_p = p1_.sum();
 
     VectorXf mu_x = target_mat_.transpose() * pt1_ / n_p;
     VectorXf mu_y = source_mat_.transpose() * p1_ / n_p;
@@ -288,14 +288,14 @@ pcl::registration::CPD<PointT>::m_step ()
 
     float tr_f = MatrixXf(X_hat.transpose()*pt1_.asDiagonal()*X_hat).trace();
     float tr_b = MatrixXf(A.transpose()*rigid_paras_.r_).trace();
-    rigid_paras_.sigma2_ = (tr_f - rigid_paras_.s_ * tr_b) / (n_p * D);
+    rigid_paras_.sigma2_ = (tr_f - rigid_paras_.s_ * tr_b) / (n_p * 3);
     rigid_paras_.sigma2_ = abs(rigid_paras_.sigma2_);
   }
   else
   {
     float n_p = p1_.sum();
 
-    MatrixXf A = (p1_.asDiagonal()*_G + nrigid_paras_.lambda_*nrigid_paras_.sigma2_*MatrixXf::Identity(M, M));
+    MatrixXf A = (p1_.asDiagonal()*g_ + nrigid_paras_.lambda_*nrigid_paras_.sigma2_*MatrixXf::Identity(M, M));
     MatrixXf B = px_ - p1_.asDiagonal() * source_mat_;
     nrigid_paras_.w_ = A.inverse() * B;
 
