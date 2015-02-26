@@ -33,7 +33,7 @@ if(build)
         "include/pcl/${SUBSYS_NAME}/correspondence_rejection_organized_boundary.h"
         "include/pcl/${SUBSYS_NAME}/correspondence_sorting.h"
         "include/pcl/${SUBSYS_NAME}/correspondence_types.h"
-        #"include/pcl/${SUBSYS_NAME}/cpd.h"
+        "include/pcl/${SUBSYS_NAME}/cpd.h"
         "include/pcl/${SUBSYS_NAME}/ia_ransac.h"
         "include/pcl/${SUBSYS_NAME}/icp.h"
         "include/pcl/${SUBSYS_NAME}/joint_icp.h"
@@ -91,7 +91,7 @@ if(build)
         "include/pcl/${SUBSYS_NAME}/impl/correspondence_rejection_var_trimmed.hpp"
         "include/pcl/${SUBSYS_NAME}/impl/correspondence_rejection_organized_boundary.hpp"
         "include/pcl/${SUBSYS_NAME}/impl/correspondence_types.hpp"
-        #"include/pcl/${SUBSYS_NAME}/impl/cpd.hpp"
+        "include/pcl/${SUBSYS_NAME}/impl/cpd.hpp"
         "include/pcl/${SUBSYS_NAME}/impl/ia_ransac.hpp"
         "include/pcl/${SUBSYS_NAME}/impl/icp.hpp"
         "include/pcl/${SUBSYS_NAME}/impl/joint_icp.hpp"
@@ -134,7 +134,7 @@ if(build)
         src/correspondence_rejection_trimmed.cpp
         src/correspondence_rejection_var_trimmed.cpp
         src/correspondence_rejection_organized_boundary.cpp
-        #src/cpd.cpp
+        src/cpd.cpp
         src/ppf_registration.cpp
         src/pyramid_feature_matching.cpp
         #src/pairwise_graph_registration.cpp

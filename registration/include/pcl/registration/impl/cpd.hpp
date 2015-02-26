@@ -41,6 +41,7 @@
 #ifndef PCL_REGISTRATION_IMPL_CPD_HPP_
 #define PCL_REGISTRATION_IMPL_CPD_HPP_
 
+#include <pcl/point_types.h>
 #include <pcl/registration/cpd.h>
 //#include "cpd.h"
 
@@ -62,21 +63,21 @@ pcl::registration::CPD<PointT>::CPD ()
 template<typename PointT> void
 pcl::registration::CPD<PointT>::initMats ()
 {
-  size_t source_size = source_cloud_.size ();
-  size_t target_size = target_cloud_.size ();
+  size_t source_size = source_cloud_->size ();
+  size_t target_size = target_cloud_->size ();
 
   source_mat_.resize (source_size, 3);
   target_mat_.resize (target_size, 3);
 
-  for (size_t i = 0, i_end = source_cloud_.size (); i < i_end; ++ i)
+  for (size_t i = 0, i_end = source_cloud_->size (); i < i_end; ++ i)
   {
-    const PointT& point = source_cloud_.at (i);
+    const PointT& point = source_cloud_->at (i);
     source_mat_.row (i) << point.x, point.y, point.z;
   }
 
-  for (size_t i = 0, i_end = target_cloud_.size (); i < i_end; ++ i)
+  for (size_t i = 0, i_end = target_cloud_->size (); i < i_end; ++ i)
   {
-    const PointT& point = target_cloud_.at (i);
+    const PointT& point = target_cloud_->at (i);
     target_mat_.row (i) << point.x, point.y, point.z;
   }
 }
@@ -85,20 +86,20 @@ pcl::registration::CPD<PointT>::initMats ()
 template<typename PointT> void
 pcl::registration::CPD<PointT>::updateClouds ()
 {
-  for (size_t i = 0, i_end = source_cloud_.size (); i < i_end; ++ i)
+  for (size_t i = 0, i_end = source_cloud_->size (); i < i_end; ++ i)
   {
-    PointT& point = source_cloud_.at (i);
-    point.x = source_mat_[i][0];
-    point.y = source_mat_[i][1];
-    point.z = source_mat_[i][2];
+    PointT& point = source_cloud_->at (i);
+    point.x = source_mat_.row(i)[0];
+    point.y = source_mat_.row(i)[1];
+    point.z = source_mat_.row(i)[2];
   }
 
-  for (size_t i = 0, i_end = target_cloud_.size (); i < i_end; ++ i)
+  for (size_t i = 0, i_end = target_cloud_->size (); i < i_end; ++ i)
   {
-    PointT& point = target_cloud_.at (i);
-    point.x = target_mat_[i][0];
-    point.y = target_mat_[i][1];
-    point.z = target_mat_[i][2];
+    PointT& point = target_cloud_->at (i);
+    point.x = target_mat_.row(i)[0];
+    point.y = target_mat_.row(i)[1];
+    point.z = target_mat_.row(i)[2];
   }
 }
 
@@ -106,8 +107,11 @@ pcl::registration::CPD<PointT>::updateClouds ()
 template<typename PointT> void
 pcl::registration::CPD<PointT>::normalize ()
 {
-  int M = source_mat_.cols();
-  int N = target_mat_.cols();
+  int M = source_mat_.rows();
+  int N = target_mat_.rows();
+
+  std::cout << "M:" << M << std::endl;
+  std::cout << "N:" << N << std::endl;
 
   source_means_ = source_mat_.colwise().mean();
   target_means_ = target_mat_.colwise().mean();
@@ -127,10 +131,10 @@ pcl::registration::CPD<PointT>::normalize ()
 template<typename PointT> void
 pcl::registration::CPD<PointT>::denormalize ()
 {
-  int M = source_mat_.cols();
-  int N = target_mat_.cols();
+  int M = source_mat_.rows();
+  int N = target_mat_.rows();
 
-  source_mat_ = source_mat_ * source_scale_ + source_means_.transpose().replicate(M, 1);
+  source_mat_ = source_mat_ * target_scale_ + target_means_.transpose().replicate(M, 1);
   target_mat_ = target_mat_ * target_scale_ + target_means_.transpose().replicate(N, 1);
 }
 
@@ -138,8 +142,8 @@ pcl::registration::CPD<PointT>::denormalize ()
 template<typename PointT> void
 pcl::registration::CPD<PointT>::computeCorres ()
 {
-  int M = source_mat_.cols();
-  int N = target_mat_.cols();
+  int M = source_mat_.rows();
+  int N = target_mat_.rows();
 
   corres_.setZero(M, N);
 
@@ -188,8 +192,8 @@ pcl::registration::CPD<PointT>::computeGaussianExp (size_t m, size_t n)
 template<typename PointT> float
 pcl::registration::CPD<PointT>::energy ()
 {
-  int M = source_mat_.cols();
-  int N = target_mat_.cols();
+  int M = source_mat_.rows();
+  int N = target_mat_.rows();
 
   float sigma2 = 0;
   if (reg_type_ == RIGID)
@@ -223,7 +227,7 @@ pcl::registration::CPD<PointT>::energy ()
 template<typename PointT> void
 pcl::registration::CPD<PointT>::align ()
 {
-  int M = source_mat_.cols();
+  int M = source_mat_.rows();
 
   if (reg_type_ == RIGID)
   {
@@ -240,8 +244,8 @@ pcl::registration::CPD<PointT>::align ()
 template<typename PointT> void
 pcl::registration::CPD<PointT>::e_step ()
 {
-  int M = source_mat_.cols();
-  int N = target_mat_.cols();
+  int M = source_mat_.rows();
+  int N = target_mat_.rows();
 
   computeCorres();
   p1_ = corres_ * VectorXf(N).setOnes();
@@ -254,8 +258,8 @@ pcl::registration::CPD<PointT>::e_step ()
 template<typename PointT> void
 pcl::registration::CPD<PointT>::m_step ()
 {
-  int M = source_mat_.cols();
-  int N = target_mat_.cols();
+  int M = source_mat_.rows();
+  int N = target_mat_.rows();
 
   if (reg_type_ == RIGID)
   {
@@ -275,10 +279,9 @@ pcl::registration::CPD<PointT>::m_step ()
     MatrixXf V = svd.matrixV();
 
     float det_uv = MatrixXf(U*V.transpose()).determinant();
-    VectorXf C(3);
-    C.setIdentity();
-    C(2) = det_uv;
-    rigid_paras_.r_ = U * C.asDiagonal() * V.transpose();
+    MatrixXf C = MatrixXf::Identity(3, 3);
+    C(2, 2) = det_uv;
+    rigid_paras_.r_ = U * C * V.transpose();
 
     float s_upper = MatrixXf(A.transpose()*rigid_paras_.r_).trace();
     float s_lower = MatrixXf(Y_hat.transpose()*p1_.asDiagonal()*Y_hat).trace();
@@ -312,8 +315,8 @@ pcl::registration::CPD<PointT>::m_step ()
 template<typename PointT> void
 pcl::registration::CPD<PointT>::initialize ()
 {
-  int M = source_mat_.cols();
-  int N = target_mat_.cols();
+  int M = source_mat_.rows();
+  int N = target_mat_.rows();
 
   if (reg_type_ == RIGID)
   {
@@ -347,7 +350,7 @@ pcl::registration::CPD<PointT>::initialize ()
 template<typename PointT> void
 pcl::registration::CPD<PointT>::constructG ()
 {
-  int M = source_mat_.cols();
+  int M = source_mat_.rows();
 
   g_ = MatrixXf::Zero(M, M);
 
@@ -364,10 +367,14 @@ pcl::registration::CPD<PointT>::constructG ()
 template<typename PointT> void
 pcl::registration::CPD<PointT>::run ()
 {
+  initMats();
+
   if (reg_type_ == RIGID)
     computeRigid();
   else
     computeNonRigid();
+
+  updateClouds();
 
   return;
 }
