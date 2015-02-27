@@ -285,54 +285,81 @@ namespace pcl
 
 
     protected:
-
+      /** \brief Initialize the transforming matrix by source matrix.
+        */
       inline void
       initTransform ()
       {
         transform_ = source_mat_;
       }
 
+      /** \brief Update the source matrix by the final transforming matrix.
+        */
       inline void
       updateSourceMat ()
       {
         source_mat_ = transform_;
       }
 
+      /** \brief Initialize the source and target matrices by source and target clouds.
+        */
       void 
       initMats ();
 
+      /** \brief Update the source and target clouds by the final source and target matrices.
+        */
       void
       updateClouds ();
 
+      /** \brief Normalize the source and target data.
+        */
       void
       normalize ();
 
+      /** \brief Denormalize the source and target data.
+        */
       void
       denormalize ();
 
 
     protected:
+      /** \brief Initialization of the cpd method.
+        */
       void
       initialize ();
 
+      /** \brief E step in EM framework.
+        */
       void
       e_step ();
 
+      /** \brief M step in EM framework.
+        */
       void
       m_step ();
 
+      /** \brief Update the transforming matrix in EM iteration process.
+        */
       void
       align ();
 
+      /** \brief Compute the correspondence matrix.
+        */
       void
       computeCorres ();
 
+      /** \brief Construct G matrix.
+        */
       void
       constructG ();
 
+      /** \brief Compute Gaussian expression.
+        */
       float
       computeGaussianExp (size_t m, size_t n);
 
+      /** \brief Compute energy value.
+        */
       float
       energy ();
 
