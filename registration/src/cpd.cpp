@@ -2,7 +2,8 @@
  * Software License Agreement (BSD License)
  *
  *  Point Cloud Library (PCL) - www.pointclouds.org
- *  Copyright (c) 2010-2011, Willow Garage, Inc.
+ *  Copyright (c) 2014-, Open Perception, Inc.
+ *  Copyright (C) 2014-, University of Chinese Academy of Sciences, Xiaochen Fan, China.
  *
  *  All rights reserved.
  *

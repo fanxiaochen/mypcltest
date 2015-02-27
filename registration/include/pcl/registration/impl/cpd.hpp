@@ -2,8 +2,8 @@
  * Software License Agreement (BSD License)
  *
  *  Point Cloud Library (PCL) - www.pointclouds.org
- *  Copyright (c) 2010-2012, Willow Garage, Inc.
- *  Copyright (c) 2012-, Open Perception, Inc.
+ *  Copyright (c) 2014-, Open Perception, Inc.
+ *  Copyright (C) 2014-, University of Chinese Academy of Sciences, Xiaochen Fan, China.
  *
  *  All rights reserved.
  *
@@ -34,8 +34,6 @@
  *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *  POSSIBILITY OF SUCH DAMAGE.
  *
- * $Id: cpd.hpp 5663 2015-02-17 13:49:39Z Xiaochen Fan $
- *
  */
 
 #ifndef PCL_REGISTRATION_IMPL_CPD_HPP_
@@ -43,7 +41,6 @@
 
 #include <pcl/point_types.h>
 #include <pcl/registration/cpd.h>
-//#include "cpd.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template<typename PointT>
@@ -282,6 +279,7 @@ pcl::registration::CPD<PointT>::m_step ()
     MatrixXf C = MatrixXf::Identity(3, 3);
     C(2, 2) = det_uv;
     rigid_paras_.r_ = U * C * V.transpose();
+
 
     float s_upper = MatrixXf(A.transpose()*rigid_paras_.r_).trace();
     float s_lower = MatrixXf(Y_hat.transpose()*p1_.asDiagonal()*Y_hat).trace();
